@@ -1,5 +1,7 @@
 package cesur.dam.inventarioappg1;
 
+import cesur.dam.inventarioappg1.models.Equipo;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
@@ -23,6 +25,16 @@ public class HelloController implements Initializable {
     private CheckBox chkDisponible;
     @FXML
     private Spinner<Integer> spinnerId;
+    @FXML
+    private TableColumn<Equipo,String> cDisponibilidad;
+    @FXML
+    private TableView<Equipo> tabla;
+    @FXML
+    private TableColumn<Equipo,String> cCategoria;
+    @FXML
+    private TableColumn<Equipo,String> cNombre;
+    @FXML
+    private TableColumn<Equipo,String> cId;
 
     /**
      * Called to initialize a controller after its root element has been
@@ -37,6 +49,13 @@ public class HelloController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         spinnerId.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 1000, 0,1));
 
+        /*
+            ChoiceBox  \
+            ListView    \ Observable .getItems() .setItems()
+            TableView   /
+
+         */
+
         ObservableList<String> categorias = FXCollections.observableArrayList();
         choiceCategoria.setItems(categorias);
 
@@ -49,6 +68,28 @@ public class HelloController implements Initializable {
         choiceCategoria.getItems().add("Printer");
 
         choiceCategoria.getSelectionModel().selectFirst();
+
+        /* Inicialización de la tabla */
+        cId.setCellValueFactory( (row)->{
+            Equipo equipo = row.getValue();
+            Long  id = equipo.getId();
+            return new SimpleStringProperty(String.valueOf(id));
+        });
+        cNombre.setCellValueFactory( (row)->{
+            if(row.getValue().getNombre().isBlank()){
+                return new SimpleStringProperty("--");
+            } else  {
+                return new SimpleStringProperty(String.valueOf(row.getValue().getNombre()));
+            }
+        });
+        cCategoria.setCellValueFactory( (row)->{
+            return new SimpleStringProperty(String.valueOf(row.getValue().getCategoria()).toUpperCase());
+        });
+        cDisponibilidad.setCellValueFactory( (row)->{
+            var disponibilidad = row.getValue().getDisponible();
+            String salida = disponibilidad? "disponible":"no disponible";
+            return new SimpleStringProperty(salida);
+        });
     }
 
     /**
@@ -79,6 +120,18 @@ public class HelloController implements Initializable {
         alert.setContentText(nombre + " | " + categoria + " | " + disponible);
         alert.showAndWait();
         txtNombre.clear();
+
+        Equipo equipo = new Equipo();
+        equipo.setNombre(nombre);
+        equipo.setCategoria(categoria);
+        equipo.setId(Long.valueOf(spinnerId.getValue()));
+        equipo.setDisponible(chkDisponible.isSelected());
+
+        tabla.getItems().add(equipo);
+
+        tabla.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println(oldValue+" | "+newValue);
+        });
 
     }
 
