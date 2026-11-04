@@ -17,21 +17,21 @@ public class DetailsController implements Initializable {
     @FXML
     private Label welcomeText;
     @FXML
-    private TextField txtNombre;
+    private TextField txtName;
     @FXML
-    private ChoiceBox<String> choiceCategoria;
+    private ChoiceBox<String> choiceCategory;
     @FXML
-    private CheckBox chkDisponible;
+    private CheckBox chkAvailable;
     @FXML
     private Spinner<Integer> spinnerId;
     @FXML
-    private TableColumn<Equipo,String> cDisponibilidad;
+    private TableColumn<Equipo,String> cAvailability;
     @FXML
-    private TableView<Equipo> tabla;
+    private TableView<Equipo> table;
     @FXML
-    private TableColumn<Equipo,String> cCategoria;
+    private TableColumn<Equipo,String> cCategory;
     @FXML
-    private TableColumn<Equipo,String> cNombre;
+    private TableColumn<Equipo,String> cName;
     @FXML
     private TableColumn<Equipo,String> cId;
 
@@ -55,39 +55,39 @@ public class DetailsController implements Initializable {
 
          */
 
-        ObservableList<String> categorias = FXCollections.observableArrayList();
-        choiceCategoria.setItems(categorias);
+        ObservableList<String> categories = FXCollections.observableArrayList();
+        choiceCategory.setItems(categories);
 
-        categorias.add("Keyboard");
-        categorias.add("Laptop");
+        categories.add("Keyboard");
+        categories.add("Laptop");
 
-        choiceCategoria.getItems().add("Gamepad");
-        choiceCategoria.getItems().add("Monitor");
-        choiceCategoria.getItems().add("Computer");
-        choiceCategoria.getItems().add("Printer");
+        choiceCategory.getItems().add("Gamepad");
+        choiceCategory.getItems().add("Monitor");
+        choiceCategory.getItems().add("Computer");
+        choiceCategory.getItems().add("Printer");
 
-        choiceCategoria.getSelectionModel().selectFirst();
+        choiceCategory.getSelectionModel().selectFirst();
 
         /* Inicialización de la tabla */
         cId.setCellValueFactory( (row)->{
-            Equipo equipo = row.getValue();
-            Long  id = equipo.getId();
+            Equipo equipment = row.getValue();
+            Long  id = equipment.getId();
             return new SimpleStringProperty(String.valueOf(id));
         });
-        cNombre.setCellValueFactory( (row)->{
+        cName.setCellValueFactory( (row)->{
             if(row.getValue().getNombre().isBlank()){
                 return new SimpleStringProperty("--");
             } else  {
                 return new SimpleStringProperty(String.valueOf(row.getValue().getNombre()));
             }
         });
-        cCategoria.setCellValueFactory( (row)->{
+        cCategory.setCellValueFactory( (row)->{
             return new SimpleStringProperty(String.valueOf(row.getValue().getCategoria()).toUpperCase());
         });
-        cDisponibilidad.setCellValueFactory( (row)->{
-            var disponibilidad = row.getValue().getDisponible();
-            String salida = disponibilidad? "disponible":"no disponible";
-            return new SimpleStringProperty(salida);
+        cAvailability.setCellValueFactory( (row)->{
+            var availability = row.getValue().getDisponible();
+            String output = availability? "disponible":"no disponible";
+            return new SimpleStringProperty(output);
         });
     }
 
@@ -103,8 +103,8 @@ public class DetailsController implements Initializable {
      * @param actionEvent evento de acción generado al pulsar el botón guardar
      */
     @FXML
-    public void guardar(ActionEvent actionEvent) {
-        if (hayCamposVacios()) {
+    public void save(ActionEvent actionEvent) {
+        if (hasEmptyFields()) {
             return;
         }
 
@@ -112,23 +112,23 @@ public class DetailsController implements Initializable {
         alert.setTitle("Guardar");
         alert.setHeaderText("Guardando");
 
-        String nombre = txtNombre.getText();
-        String categoria = choiceCategoria.getSelectionModel().getSelectedItem();
-        String disponible = chkDisponible.isSelected() ? "disponible" : "no disponible";
+        String name = txtName.getText();
+        String category = choiceCategory.getSelectionModel().getSelectedItem();
+        String available = chkAvailable.isSelected() ? "disponible" : "no disponible";
 
-        alert.setContentText(nombre + " | " + categoria + " | " + disponible);
+        alert.setContentText(name + " | " + category + " | " + available);
         alert.showAndWait();
-        txtNombre.clear();
+        txtName.clear();
 
-        Equipo equipo = new Equipo();
-        equipo.setNombre(nombre);
-        equipo.setCategoria(categoria);
-        equipo.setId(Long.valueOf(spinnerId.getValue()));
-        equipo.setDisponible(chkDisponible.isSelected());
+        Equipo equipment = new Equipo();
+        equipment.setNombre(name);
+        equipment.setCategoria(category);
+        equipment.setId(Long.valueOf(spinnerId.getValue()));
+        equipment.setDisponible(chkAvailable.isSelected());
 
-        tabla.getItems().add(equipo);
+        table.getItems().add(equipment);
 
-        tabla.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+        table.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             System.out.println(oldValue+" | "+newValue);
         });
 
@@ -140,8 +140,8 @@ public class DetailsController implements Initializable {
      * @return {@code true} si al menos uno de los campos id, nombre, categoría
      *         o disponible está vacío; {@code false} en caso contrario
      */
-    private boolean hayCamposVacios() {
-        return txtNombre.getText().isEmpty();
+    private boolean hasEmptyFields() {
+        return txtName.getText().isEmpty();
     }
 
     /**
@@ -154,7 +154,7 @@ public class DetailsController implements Initializable {
      * @param actionEvent evento de acción generado al pulsar el botón volver
      */
     @FXML
-    public void volver(ActionEvent actionEvent) {
+    public void goBack(ActionEvent actionEvent) {
         System.exit(0);
     }
 }
