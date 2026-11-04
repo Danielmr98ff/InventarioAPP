@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cesur.dam.inventarioappg1.HelloController">
+<BorderPane xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cesur.dam.inventarioappg1.controllers.DetailsController">
    <center>
       <VBox alignment="CENTER" maxWidth="445.0" prefHeight="619.0" prefWidth="445.0" spacing="20.0" BorderPane.alignment="CENTER">
           <padding>
@@ -24,7 +24,7 @@
           </padding>
          <ImageView fitHeight="71.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true">
             <image>
-               <Image url="@computer.png" />
+               <Image url="@../computer.png" />
             </image>
          </ImageView>
       
@@ -73,7 +73,7 @@
                   <graphic>
                      <ImageView fitHeight="150.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                         <image>
-                           <Image url="@disk.png" />
+                           <Image url="@../disk.png" />
                         </image>
                      </ImageView>
                   </graphic>
