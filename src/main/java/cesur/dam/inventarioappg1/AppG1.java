@@ -1,19 +1,23 @@
 package cesur.dam.inventarioappg1;
 
+import cesur.dam.inventarioappg1.controllers.NavigationController;
+import cesur.dam.inventarioappg1.data.DataBaseInitializer;
+import cesur.dam.inventarioappg1.data.DataSourceFactory;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.IOException;
+import javax.sql.DataSource;
 
 public class AppG1 extends Application {
     @Override
-    public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(AppG1.class.getResource("views/login-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("Inventario App G1");
-        stage.setScene(scene);
-        stage.show();
+    public void start(Stage stage) {
+        // Prepara la base de datos (tabla y datos iniciales) reutilizando la capa DAO
+        DataSource ds = DataSourceFactory.getDataSource();
+        DataBaseInitializer.initialize(ds);
+        DataBaseInitializer.loadData(ds);
+
+        // El controlador de navegación toma el escenario principal y muestra la vista de login
+        NavigationController nav = NavigationController.init(stage);
+        nav.go(NavigationController.View.LOGIN);
     }
 }
